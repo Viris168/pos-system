@@ -21,6 +21,10 @@ public class Cashier_main extends javax.swing.JFrame {
         fetchDataFromDatabase();  
     }
     
+    public void test(){
+        System.out.println("Hello World");
+    }
+    
 // Fetch data from DatabaseManager and store it in productList
     private void fetchDataFromDatabase() {
         // Initialize the product list
