@@ -1,13 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package Admin;
 
-/**
- *
- * @author sokvireak
- */
 public class Admin_main extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Admin_main.class.getName());
@@ -182,9 +175,7 @@ public class Admin_main extends javax.swing.JFrame {
     private void jButtonProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProductActionPerformed
         
         product p = new product();
-        loader.jPanelLoader(jPanelForload, p);
-        
-        
+        loader.jPanelLoader(jPanelForload, p);  
     }//GEN-LAST:event_jButtonProductActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
