@@ -1,12 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package Admin;
 
 
 import java.sql.*;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class product extends javax.swing.JPanel {   
@@ -58,7 +56,7 @@ public class product extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
-}
+    }
     public class ProductDelete {
     public static void deleteProduct(int productId) {
         String query = "DELETE FROM Products WHERE product_id = ?";
@@ -97,6 +95,7 @@ public class product extends javax.swing.JPanel {
         jTextFieldProductPrice.setText("");
         jTextFieldProductSupplier.setText("");
         jTextFieldProductLowstock.setText("");
+        jTextFieldSearch.setText("");
     }
 
     public product(){
@@ -237,11 +236,13 @@ public class product extends javax.swing.JPanel {
         jButtonUpdateProduct.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         jButtonUpdateProduct.setForeground(new java.awt.Color(255, 255, 255));
         jButtonUpdateProduct.setText("Update");
+        jButtonUpdateProduct.addActionListener(this::jButtonUpdateProductActionPerformed);
 
         jButtonDeleteProduct.setBackground(new java.awt.Color(255, 0, 51));
         jButtonDeleteProduct.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         jButtonDeleteProduct.setForeground(new java.awt.Color(255, 255, 255));
         jButtonDeleteProduct.setText("Delete");
+        jButtonDeleteProduct.addActionListener(this::jButtonDeleteProductActionPerformed);
 
         jTextFieldProductName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jTextFieldProductName.addActionListener(this::jTextFieldProductNameActionPerformed);
@@ -359,7 +360,7 @@ public class product extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Product Name", "Category", "Quantity", "Price", "Supplier", "Low sotck"
+                "ID", "Product Name", "Quantity", "Price", "Category", "Supplier", "Low sotck"
             }
         ) {
             Class[] types = new Class [] {
@@ -375,6 +376,11 @@ public class product extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTableProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableProductMouseClicked(evt);
             }
         });
         jTableProduct.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -443,6 +449,7 @@ public class product extends javax.swing.JPanel {
 
             // Insert into the database
             ProductAdd.addProduct(name, quantityInt, priceDouble, categoryInt, supplier, lowStockInt);
+            table_product();
             
             clear();
         
@@ -471,7 +478,7 @@ public class product extends javax.swing.JPanel {
 
     private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
         
-        
+        clear();
     }//GEN-LAST:event_jButtonClearActionPerformed
 
     private void jTableProductKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableProductKeyPressed
@@ -495,6 +502,42 @@ public class product extends javax.swing.JPanel {
                 jTextFieldProductLowstock.setText(low_stock);
         
     }//GEN-LAST:event_jTableProductKeyPressed
+
+    private void jButtonUpdateProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateProductActionPerformed
+        
+        String name = jTextFieldProductName.getText();
+        String category = jTextFieldProductCategory.getText();
+        String quantity = jTextFieldProductQuantity.getText();
+        String price = jTextFieldProductPrice.getText();
+        String supplier = jTextFieldProductSupplier.getText();
+        String lowstock = jTextFieldProductLowstock.getText();
+        
+        
+            int productId = Integer.parseInt(jTextFieldSearch.getText());
+            int quantityInt = Integer.parseInt(quantity);
+            double priceDouble = Double.parseDouble(price);
+            int lowStockInt = Integer.parseInt(lowstock);
+            int categoryInt = Integer.parseInt(category);
+            
+            ProductUpdate.updateProduct(productId, name, quantityInt, priceDouble, categoryInt, supplier, lowStockInt);
+            
+            table_product();  
+            clear();
+    }//GEN-LAST:event_jButtonUpdateProductActionPerformed
+
+    private void jButtonDeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteProductActionPerformed
+         String id = jTextFieldSearch.getText();
+        int idInt = Integer.parseInt(id);
+
+        ProductDelete.deleteProduct(idInt);
+  
+        table_product();
+        clear();
+    }//GEN-LAST:event_jButtonDeleteProductActionPerformed
+
+    private void jTableProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableProductMouseClicked
+
+    }//GEN-LAST:event_jTableProductMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
