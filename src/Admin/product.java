@@ -2,8 +2,10 @@
 package Admin;
 
 
+import java.awt.Image;
 import java.sql.*;
 import java.util.Vector;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -70,24 +72,6 @@ public class product extends javax.swing.JPanel {
         }
     }
 }
-    public class LowStockAlert {
-    public static void checkLowStock() {
-        String query = "SELECT * FROM Products WHERE quantity <= low_stock_threshold";
-        try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-             
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                System.out.println("Low Stock Alert: " + rs.getString("product_name") + " - Stock: " + rs.getInt("quantity"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
-}
-
     public void clear(){ 
         jTextFieldProductName.setText("");
         jTextFieldProductCategory.setText("");
@@ -97,10 +81,15 @@ public class product extends javax.swing.JPanel {
         jTextFieldProductLowstock.setText("");
         jTextFieldSearch.setText("");
     }
+    
+
 
     public product(){
         initComponents();
         table_product();
+        setImage();
+        checkLowStock();
+        
     }
     
     public void table_product(){
@@ -129,6 +118,38 @@ public class product extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
+    
+    public void setImage(){
+    try {
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Admin/image_admin/wa.png"));
+        
+        Image img = icon.getImage().getScaledInstance(67, 67, Image.SCALE_SMOOTH);
+        jLabelwarn.setIcon(new ImageIcon(img));
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Error loading image: " + e.getMessage());
+    }
+}
+    
+    public void checkLowStock() {
+    String query = "SELECT * FROM Products WHERE quantity <= low_stock_threshold";
+    
+    try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        ResultSet rs = stmt.executeQuery();
+        int x = 0;
+        
+        while (rs.next()) {
+            x++;
+        }
+        jLabelNumber.setText(String.valueOf(x));
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        jLabelNumber.setText("Error loading stock data");
+    }
+}
 
     
 
@@ -161,8 +182,12 @@ public class product extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProduct = new javax.swing.JTable();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabelNumber = new javax.swing.JLabel();
+        jLabelwarn = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(153, 153, 153));
+        setBackground(new java.awt.Color(204, 204, 204));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanelSearchID.setBackground(new java.awt.Color(255, 255, 255));
@@ -206,7 +231,7 @@ public class product extends javax.swing.JPanel {
 
         add(jPanelSearchID, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 22, -1, 50));
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel1.setText("Product Name :");
@@ -332,7 +357,7 @@ public class product extends javax.swing.JPanel {
                     .addComponent(jTextFieldProductLowstock, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonUpdateProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -340,7 +365,9 @@ public class product extends javax.swing.JPanel {
                 .addGap(15, 15, 15))
         );
 
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 170, -1, -1));
+        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 170, -1, 430));
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
         jTableProduct.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -394,14 +421,54 @@ public class product extends javax.swing.JPanel {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 781, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
         );
 
         add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 86, 781, 518));
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel7.setText("Low Stock products : ");
+
+        jLabelNumber.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabelNumber.setForeground(new java.awt.Color(255, 0, 0));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(106, 106, 106)
+                        .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 10, 380, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSearchActionPerformed
@@ -526,15 +593,61 @@ public class product extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonUpdateProductActionPerformed
 
     private void jButtonDeleteProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteProductActionPerformed
-         String id = jTextFieldSearch.getText();
-        int idInt = Integer.parseInt(id);
+                                                         
+    DefaultTableModel dt = (DefaultTableModel) jTableProduct.getModel();
+    int selectedRow = jTableProduct.getSelectedRow();
 
-        ProductDelete.deleteProduct(idInt);
-  
-        table_product();
-        clear();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Please select a product to delete");
+        return;
+    }
+
+    // Get product ID from the first column (index 0)
+    String productId = dt.getValueAt(selectedRow, 0).toString();
+
+    // Confirm deletion
+    int confirm = JOptionPane.showConfirmDialog(
+        null,
+        "Are you sure you want to delete this product?",
+        "Confirm Delete",
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // Delete from database
+    String query = "DELETE FROM Products WHERE product_id = ?";
+
+    try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        stmt.setInt(1, Integer.parseInt(productId));
+        int rowsDeleted = stmt.executeUpdate();
+
+        if (rowsDeleted > 0) {
+            JOptionPane.showMessageDialog(null, "Product deleted successfully");
+            table_product(); // Refresh the table
+            clear(); // Clear the input fields
+        } else {
+            JOptionPane.showMessageDialog(null, "Failed to delete product");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error deleting product: " + e.getMessage());
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Invalid product ID format");
+    }
+
+        
     }//GEN-LAST:event_jButtonDeleteProductActionPerformed
 
+
+   
+
+    
     private void jTableProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableProductMouseClicked
 
     }//GEN-LAST:event_jTableProductMouseClicked
@@ -552,9 +665,13 @@ public class product extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelNumber;
     private javax.swing.JLabel jLabelSearchID;
+    private javax.swing.JLabel jLabelwarn;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanelSearchID;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProduct;
