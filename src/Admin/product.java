@@ -1,13 +1,14 @@
 
 package Admin;
 
-
 import java.awt.Image;
 import java.sql.*;
 import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class product extends javax.swing.JPanel {   
     
@@ -89,9 +90,36 @@ public class product extends javax.swing.JPanel {
         table_product();
         setImage();
         checkLowStock();
+        loadProductsToTable();
         
     }
-    
+    public void loadProductsToTable() {
+    DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
+    model.setRowCount(0);
+
+    String sql = "SELECT product_id, product_name, quantity, price, category_id, supplier, low_stock_threshold FROM Products";
+
+    try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("product_id"),      // ✅ keep as int
+                rs.getString("product_name"),
+                rs.getInt("quantity"),
+                rs.getDouble("price"),
+                rs.getInt("category_id"),
+                rs.getString("supplier"),
+                rs.getInt("low_stock_threshold")
+            });
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
     public void table_product(){
         String query = "SELECT * FROM Products ";
         try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -454,7 +482,7 @@ public class product extends javax.swing.JPanel {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(106, 106, 106)
                         .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -468,7 +496,7 @@ public class product extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 10, 380, -1));
+        add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 10, 370, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSearchActionPerformed
@@ -523,8 +551,35 @@ public class product extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonAddProductActionPerformed
 
     private void jButtonSeaarchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSeaarchActionPerformed
-        
+         DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTableProduct.setRowSorter(sorter);
         String search = jTextFieldSearch.getText();
+        
+        if (search.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter Product ID");
+        return;
+    }
+
+    int id;
+    try {
+        id = Integer.parseInt(search);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Product ID must be a number!");
+        return;
+    }
+
+    // ✅ Filter JTable by product_id column index (example: column 0 = product_id)
+    sorter.setRowFilter(RowFilter.regexFilter("^" + id + "$", 0));
+
+    // ✅ If no row found in JTable after filtering
+    if (jTableProduct.getRowCount() == 0) {
+        sorter.setRowFilter(null); // reset
+        JOptionPane.showMessageDialog(this, "Product ID not found in table!");
+        return;
+    }
+        
+        
         String query = "SELECT * FROM Products WHERE product_id = '"+search+"'  ";
         try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -643,10 +698,6 @@ public class product extends javax.swing.JPanel {
 
         
     }//GEN-LAST:event_jButtonDeleteProductActionPerformed
-
-
-   
-
     
     private void jTableProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableProductMouseClicked
 

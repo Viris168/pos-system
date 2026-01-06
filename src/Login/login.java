@@ -3,6 +3,7 @@ package login;
 
 // Import the Cashier_main class from pos.system package
 import pos.system.Cashier_main;
+import Admin.Admin_main;
 import javax.swing.JOptionPane;
 
 public class login extends javax.swing.JFrame {
@@ -28,8 +29,8 @@ public class login extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jTextField2 = new javax.swing.JPasswordField();
         jPanel6 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -124,10 +125,10 @@ public class login extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField1)
-                    .addComponent(jTextField2)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jTextField2))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -247,10 +248,14 @@ public class login extends javax.swing.JFrame {
                     "Success", 
                     JOptionPane.INFORMATION_MESSAGE);
                 
-               /// Open Cashier_main after successful login
-            Cashier_main cashierFrame = new Cashier_main();
-            cashierFrame.setVisible(true);  // Display Cashier_main frame
-            this.dispose();
+                        
+                     
+                         
+                            Admin_main admin = new Admin_main();
+                            admin.setVisible(true);
+                            this.dispose();
+                       
+                        
             } else {
                 JOptionPane.showMessageDialog(this, 
                     "Invalid username, password, or user type", 
@@ -293,7 +298,7 @@ public class login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPasswordField jTextField2;
     private javax.swing.JPanel lock_icon;
     private javax.swing.JLabel login_sys;
     // End of variables declaration//GEN-END:variables
