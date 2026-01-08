@@ -2,7 +2,7 @@
 package login;
 
 // Import the Cashier_main class from pos.system package
-import pos.system.Cashier_main;
+import Cashier.Cashier_main;
 import Admin.Admin_main;
 import javax.swing.JOptionPane;
 
