@@ -153,6 +153,10 @@ public class product extends javax.swing.JPanel {
         
         Image img = icon.getImage().getScaledInstance(67, 67, Image.SCALE_SMOOTH);
         jLabelwarn.setIcon(new ImageIcon(img));
+        
+   
+        
+        
     } catch (Exception e) {
         e.printStackTrace();
         System.out.println("Error loading image: " + e.getMessage());
@@ -190,6 +194,7 @@ public class product extends javax.swing.JPanel {
         jLabelSearchID = new javax.swing.JLabel();
         jTextFieldSearch = new javax.swing.JTextField();
         jButtonSeaarch = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -230,6 +235,10 @@ public class product extends javax.swing.JPanel {
         jButtonSeaarch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Admin/image_admin/search.png"))); // NOI18N
         jButtonSeaarch.addActionListener(this::jButtonSeaarchActionPerformed);
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setText("Refresh");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
         javax.swing.GroupLayout jPanelSearchIDLayout = new javax.swing.GroupLayout(jPanelSearchID);
         jPanelSearchID.setLayout(jPanelSearchIDLayout);
         jPanelSearchIDLayout.setHorizontalGroup(
@@ -238,10 +247,12 @@ public class product extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabelSearchID)
                 .addGap(18, 18, 18)
-                .addComponent(jTextFieldSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
-                .addGap(32, 32, 32)
+                .addComponent(jTextFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonSeaarch, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanelSearchIDLayout.setVerticalGroup(
             jPanelSearchIDLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,9 +262,11 @@ public class product extends javax.swing.JPanel {
                     .addComponent(jLabelSearchID, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldSearch))
                 .addContainerGap(11, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSearchIDLayout.createSequentialGroup()
+            .addGroup(jPanelSearchIDLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButtonSeaarch, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addGroup(jPanelSearchIDLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonSeaarch, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -703,8 +716,20 @@ public class product extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jTableProductMouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTableProduct.setRowSorter(sorter);
+        jTextFieldSearch.setText("");  // Clear the search field
+        sorter.setRowFilter(null);  // Reset the filter
+        
+        checkLowStock();
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAddProduct;
     private javax.swing.JButton jButtonClear;
     private javax.swing.JButton jButtonDeleteProduct;
