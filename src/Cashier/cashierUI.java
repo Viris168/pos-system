@@ -599,6 +599,7 @@ public class cashierUI extends javax.swing.JFrame {
         snackButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         snackButton.setContentAreaFilled(false);
         snackButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        snackButton.addActionListener(this::snackButtonActionPerformed);
 
         javax.swing.GroupLayout categoryPanelLayout = new javax.swing.GroupLayout(categoryPanel);
         categoryPanel.setLayout(categoryPanelLayout);
@@ -753,6 +754,10 @@ public class cashierUI extends javax.swing.JFrame {
         deleteButton.setEnabled(false);
         grandTotalText.setVisible(false);
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void snackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snackButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_snackButtonActionPerformed
 
     /**
      * @param args the command line arguments
