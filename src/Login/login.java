@@ -2,7 +2,7 @@
 package login;
 
 // Import the Cashier_main class from pos.system package
-import Cashier.Cashier_main;
+import Cashier.cashierUI;
 import Admin.Admin_main;
 import javax.swing.JOptionPane;
 
@@ -81,6 +81,7 @@ public class login extends javax.swing.JFrame {
 
         login_sys.setBackground(new java.awt.Color(255, 255, 255));
         login_sys.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        login_sys.setForeground(new java.awt.Color(255, 255, 0));
         login_sys.setText("      Login System");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -151,10 +152,15 @@ public class login extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
+        jButton1.setBackground(new java.awt.Color(0, 0, 0));
         jButton1.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Close");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
+        jButton2.setBackground(new java.awt.Color(51, 255, 204));
         jButton2.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Login");
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -243,18 +249,23 @@ public class login extends javax.swing.JFrame {
             
             // Attempt login
             if (Operation.isLogin(username, password, usertype, this)) {
+              if (LoginSession.Usertype.equals("admin")) {
+                  Admin_main admin = new Admin_main();
+                  admin.setVisible(true);
+                  this.dispose();  // Close the login window
+              }
+              
+              else if (LoginSession.Usertype.equals("cashier")) {
+                  cashierUI cash = new cashierUI();
+                  cash.setVisible(true);
+                  this.dispose();  
+              }
+                            
                 JOptionPane.showMessageDialog(this, 
                     "Login successful! Welcome " + LoginSession.Nickname, 
                     "Success", 
                     JOptionPane.INFORMATION_MESSAGE);
                 
-                        
-                     
-                         
-                            Admin_main admin = new Admin_main();
-                            admin.setVisible(true);
-                            this.dispose();
-                       
                         
             } else {
                 JOptionPane.showMessageDialog(this, 
@@ -277,6 +288,11 @@ public class login extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+         System.exit(0);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
         

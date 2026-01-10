@@ -1,6 +1,9 @@
 
 package Admin;
 
+import Cashier.cashierUI;
+import login.login;
+
 public class Admin_main extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Admin_main.class.getName());
@@ -187,6 +190,8 @@ public class Admin_main extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        Bills b = new Bills();
+        loader.jPanelLoader(jPanelForload, b);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -204,6 +209,9 @@ public class Admin_main extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
+                   login l = new login();
+                  l.setVisible(true);
+                  this.dispose();
     }//GEN-LAST:event_jButton7ActionPerformed
 
 

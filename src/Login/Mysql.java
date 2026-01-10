@@ -11,21 +11,19 @@ import java.sql.SQLException;
 
 public class Mysql {
 
-    public static Connection getConnection() throws SQLException {
-        // Connection details matching your Workbench setup
-        String dbUrl = "jdbc:mysql://127.0.0.1:3306/loginform?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-        String hostUsername = "root";
-        String hostPassword = "Chay00))";
+    private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
+    private static final String USER = "root";  
+    private static final String PASS = "Chay00))";
 
+    public static Connection getConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("JDBC Driver not found", e);
+            return DriverManager.getConnection(DB_URL, USER, PASS);
+        } catch (Exception e) {
+            System.out.println("Database connection failed!");
+            e.printStackTrace();
+            return null;
         }
-
-        Connection conn = DriverManager.getConnection(dbUrl, hostUsername, hostPassword);
-        System.out.println("✓ Database connected!");
-        return conn;
     }
 }
 
