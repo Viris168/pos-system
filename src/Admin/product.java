@@ -12,23 +12,23 @@ import javax.swing.table.TableRowSorter;
 
 public class product extends javax.swing.JPanel {   
     
-           private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/p";  
+           private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
            private static final String USER = "root";  
            private static final String PASS = "Chay00))";     
     
     public class ProductAdd {
-    public static void addProduct(String name, int quantity, double price, int categoryId, String supplier, int lowStockThreshold) {
+    public static void addProduct(String name, int quantity, double price, String category, String supplier, int lowStockThreshold) {
      
-        String query = "INSERT INTO Products (product_name, quantity, price, category_id, supplier, low_stock_threshold) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO products (product_name, price, category, stock, supplier, low_stock_threshold) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
              
-            stmt.setString(1, name);
-            stmt.setInt(2, quantity);
-            stmt.setDouble(3, price);
-            stmt.setInt(4, categoryId);
-            stmt.setString(5, supplier);
+            stmt.setString(1, name);                 
+            stmt.setDouble(2, price);                
+            stmt.setString(3, category);             
+            stmt.setInt(4, quantity);                
+            stmt.setString(5, supplier);             
             stmt.setInt(6, lowStockThreshold);
           
             conn.setAutoCommit(true);
@@ -42,19 +42,20 @@ public class product extends javax.swing.JPanel {
 }
     
     public class ProductUpdate {
-    public static void updateProduct(int productId, String name, int quantity, double price, int categoryId, String supplier, int lowStockThreshold) {
-        String query = "UPDATE Products SET product_name = ?, quantity = ?, price = ?, category_id = ?, supplier = ?, low_stock_threshold = ? WHERE product_id = ?";
+    public static void updateProduct(int productId, String name, int stock, double price, String category, String supplier, int lowStockThreshold) {
+        String query = "UPDATE products SET product_name = ?, price = ?, category = ?, stock = ?, supplier = ?, low_stock_threshold = ? WHERE product_id = ?";
         try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
              
-            stmt.setString(1, name);
-            stmt.setInt(2, quantity);
-            stmt.setDouble(3, price);
-            stmt.setInt(4, categoryId);
-            stmt.setString(5, supplier);
-            stmt.setInt(6, lowStockThreshold);
-            stmt.setInt(7, productId);
+             stmt.setString(1, name);                 
+            stmt.setDouble(2, price);               
+            stmt.setString(3, category);       
+            stmt.setInt(4, stock);
+            stmt.setString(5, supplier);       
+            stmt.setInt(6, lowStockThreshold);       
+            stmt.setInt(7, productId); 
             stmt.executeUpdate();
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -97,7 +98,7 @@ public class product extends javax.swing.JPanel {
     DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
     model.setRowCount(0);
 
-    String sql = "SELECT product_id, product_name, quantity, price, category_id, supplier, low_stock_threshold FROM Products";
+    String sql = "SELECT product_id, product_name, stock, price, category, supplier, low_stock_threshold FROM products";
 
     try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
          PreparedStatement ps = conn.prepareStatement(sql);
@@ -107,9 +108,9 @@ public class product extends javax.swing.JPanel {
             model.addRow(new Object[]{
                 rs.getInt("product_id"),      // ✅ keep as int
                 rs.getString("product_name"),
-                rs.getInt("quantity"),
+                rs.getInt("stock"),
                 rs.getDouble("price"),
-                rs.getInt("category_id"),
+                rs.getString("category"),
                 rs.getString("supplier"),
                 rs.getInt("low_stock_threshold")
             });
@@ -153,10 +154,6 @@ public class product extends javax.swing.JPanel {
         
         Image img = icon.getImage().getScaledInstance(67, 67, Image.SCALE_SMOOTH);
         jLabelwarn.setIcon(new ImageIcon(img));
-        
-   
-        
-        
     } catch (Exception e) {
         e.printStackTrace();
         System.out.println("Error loading image: " + e.getMessage());
@@ -164,7 +161,7 @@ public class product extends javax.swing.JPanel {
 }
     
     public void checkLowStock() {
-    String query = "SELECT * FROM Products WHERE quantity <= low_stock_threshold";
+    String query = "SELECT * FROM Products WHERE stock <= low_stock_threshold";
     
     try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
          PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -252,7 +249,7 @@ public class product extends javax.swing.JPanel {
                 .addComponent(jButtonSeaarch, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanelSearchIDLayout.setVerticalGroup(
             jPanelSearchIDLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -270,7 +267,7 @@ public class product extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        add(jPanelSearchID, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 22, -1, 50));
+        add(jPanelSearchID, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 22, 780, 50));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
@@ -553,10 +550,10 @@ public class product extends javax.swing.JPanel {
             int quantityInt = Integer.parseInt(quantity);
             double priceDouble = Double.parseDouble(price);
             int lowStockInt = Integer.parseInt(lowstock);
-            int categoryInt = Integer.parseInt(category);
+            
 
             // Insert into the database
-            ProductAdd.addProduct(name, quantityInt, priceDouble, categoryInt, supplier, lowStockInt);
+            ProductAdd.addProduct(name, quantityInt, priceDouble, category, supplier, lowStockInt);
             table_product();
             
             clear();
@@ -600,9 +597,9 @@ public class product extends javax.swing.JPanel {
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
                 jTextFieldProductName.setText(rs.getString("product_name"));
-                jTextFieldProductQuantity.setText(rs.getString("quantity"));
+                jTextFieldProductQuantity.setText(rs.getString("stock"));
                 jTextFieldProductPrice.setText(rs.getString("price"));
-                jTextFieldProductCategory.setText(rs.getString("category_id"));
+                jTextFieldProductCategory.setText(rs.getString("category"));
                 jTextFieldProductSupplier.setText(rs.getString("supplier"));
                 jTextFieldProductLowstock.setText(rs.getString("low_stock_threshold"));
             }
@@ -652,9 +649,9 @@ public class product extends javax.swing.JPanel {
             int quantityInt = Integer.parseInt(quantity);
             double priceDouble = Double.parseDouble(price);
             int lowStockInt = Integer.parseInt(lowstock);
-            int categoryInt = Integer.parseInt(category);
             
-            ProductUpdate.updateProduct(productId, name, quantityInt, priceDouble, categoryInt, supplier, lowStockInt);
+            
+            ProductUpdate.updateProduct(productId, name, quantityInt, priceDouble, category, supplier, lowStockInt);
             
             table_product();  
             clear();
