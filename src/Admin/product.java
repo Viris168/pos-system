@@ -9,6 +9,10 @@ import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class product extends javax.swing.JPanel {   
     
@@ -360,7 +364,7 @@ public class product extends javax.swing.JPanel {
                         .addComponent(jButtonUpdateProduct)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonDeleteProduct)
-                        .addGap(0, 61, Short.MAX_VALUE))
+                        .addGap(0, 56, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonClear)))
@@ -403,7 +407,7 @@ public class product extends javax.swing.JPanel {
                 .addGap(15, 15, 15))
         );
 
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 170, -1, 430));
+        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 170, 370, 430));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
