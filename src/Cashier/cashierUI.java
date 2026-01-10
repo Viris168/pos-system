@@ -4,18 +4,12 @@
  */
 package Cashier;
 
-import com.sun.jdi.Value;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.util.ArrayList;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -25,24 +19,25 @@ import javax.swing.table.DefaultTableModel;
 public class cashierUI extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(cashierUI.class.getName());
-    
-    private ArrayList<ProductCard> productCards = new ArrayList<>();
     private DefaultTableModel cartModel;
     private double subTotal = 0;
     private double tax = 0;
     private double grandTotal = 0;
     
     private void initDefault(){
-        subtotalText.setText(formatMoney(subTotal));
-        taxRateText.setText(formatMoney(tax));
-        grandTotalText.setText(formatMoney(grandTotal));
+        subtotalText.setText(String.format("$ %.2f", subTotal));
+        taxRateText.setText(String.format("$ %.2f", tax));
+        grandTotalText.setText(String.format("$ %.2f", grandTotal));
         discountInput.setText("0");
+        increaseButton.setEnabled(false);
+        decreaseButton.setEnabled(false);
+        deleteButton.setEnabled(false);
+        grandTotalText.setVisible(false);
     }
     
     // load all products from database then make a product card to display in grid container
     private void displayProducts(ArrayList<Product> products) {
         productContainer.removeAll();
-        productCards.clear();
 
         for (Product p : products) {
             String imageName = ProductImageMapper.getImage(p.getName());
@@ -56,15 +51,10 @@ public class cashierUI extends javax.swing.JFrame {
             );
 
             productContainer.add(card);
-            productCards.add(card);
         }
 
         productContainer.revalidate();
         productContainer.repaint();
-    }
-
-    private String formatMoney(double value) {
-        return String.format("$ %.2f", value);
     }
     
     private void initCartTable(){
@@ -77,6 +67,8 @@ public class cashierUI extends javax.swing.JFrame {
                 // check if any row is selected, -1 = nothing selected, 0+ = something selected
                 boolean rowSelected = cartTable.getSelectedRow() != -1;
                 // enable delete button only if a row is selected
+                decreaseButton.setEnabled(rowSelected);
+                increaseButton.setEnabled(rowSelected);
                 deleteButton.setEnabled(rowSelected);
             }
         });
@@ -103,7 +95,7 @@ public class cashierUI extends javax.swing.JFrame {
                 double newTotal = newQty * price;
 
                 cartModel.setValueAt(newQty, i, 2);
-                cartModel.setValueAt(formatMoney(newTotal), i, 3);
+                cartModel.setValueAt(String.format("$ %.2f", newTotal), i, 3);
 
                 found = true;
                 break;
@@ -116,7 +108,7 @@ public class cashierUI extends javax.swing.JFrame {
                     name,
                     price,
                     quantity,
-                    formatMoney(total)
+                    String.format("$ %.2f", total)
             });
         }
         
@@ -126,10 +118,6 @@ public class cashierUI extends javax.swing.JFrame {
         
         subtotalText.setText(String.format("$ %.2f", subTotal));
         taxRateText.setText(String.format("$ %.2f", tax));
-    }
-    
-    private boolean isCartEmpty() {
-        return cartTable.getRowCount() == 0;
     }
     
     private String generateReceipt(double cashPaid, double change) {
@@ -159,7 +147,7 @@ public class cashierUI extends javax.swing.JFrame {
         receipt.append(String.format("CASH   : $%.2f\n", cashPaid));
         receipt.append(String.format("CHANGE : $%.2f\n", change));
         receipt.append("--------------------------------\n");
-        receipt.append(" THANK YOU! COME AGAIN\n");
+        receipt.append("        THANK YOU!\n");
 
         return receipt.toString();
     }
@@ -177,15 +165,19 @@ public class cashierUI extends javax.swing.JFrame {
             null,
             pane,
             "Receipt Preview",
-            JOptionPane.INFORMATION_MESSAGE
+            JOptionPane.PLAIN_MESSAGE
         );
     }
 
     public cashierUI() {
         initComponents();
         
+        // loads all products from database
+        displayProducts(ProductQuery.getAllProducts());
         // make every text label to display in default value, which is 0
         initDefault();
+        
+        // init cart table
         initCartTable();
         
         setLocationRelativeTo(null);
@@ -221,6 +213,8 @@ public class cashierUI extends javax.swing.JFrame {
         payButton = new javax.swing.JButton();
         grandTotalLabel = new javax.swing.JLabel();
         grandTotalText = new javax.swing.JLabel();
+        decreaseButton = new javax.swing.JButton();
+        increaseButton = new javax.swing.JButton();
         categoryPanel = new javax.swing.JPanel();
         allButton = new javax.swing.JButton();
         beverageButton = new javax.swing.JButton();
@@ -289,9 +283,7 @@ public class cashierUI extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -338,6 +330,16 @@ public class cashierUI extends javax.swing.JFrame {
 
         grandTotalText.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
+        decreaseButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        decreaseButton.setText("-");
+        decreaseButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        decreaseButton.addActionListener(this::decreaseButtonActionPerformed);
+
+        increaseButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        increaseButton.setText("+");
+        increaseButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        increaseButton.addActionListener(this::increaseButtonActionPerformed);
+
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
@@ -348,31 +350,23 @@ public class cashierUI extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(rightPanelLayout.createSequentialGroup()
                         .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(rightPanelLayout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(rightPanelLayout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(rightPanelLayout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(deleteButton))
-                                            .addGroup(rightPanelLayout.createSequentialGroup()
-                                                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel1)
-                                                    .addComponent(subtotalLabel)
-                                                    .addComponent(taxLabel))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rightPanelLayout.createSequentialGroup()
-                                                        .addComponent(discountInput, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(applyButton))
-                                                    .addComponent(subtotalText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(taxRateText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                                    .addGroup(rightPanelLayout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(grandTotalText, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(subtotalLabel)
+                                    .addComponent(taxLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rightPanelLayout.createSequentialGroup()
+                                        .addComponent(discountInput, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(applyButton))
+                                    .addComponent(subtotalText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(taxRateText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(grandTotalText, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(rightPanelLayout.createSequentialGroup()
                                 .addGap(16, 16, 16)
                                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,7 +377,14 @@ public class cashierUI extends javax.swing.JFrame {
                                         .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(13, 13, 13)))))
+                                        .addGap(13, 13, 13))))
+                            .addGroup(rightPanelLayout.createSequentialGroup()
+                                .addGap(170, 170, 170)
+                                .addComponent(decreaseButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(increaseButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteButton)))
                         .addGap(11, 11, 11)))
                 .addContainerGap())
         );
@@ -393,8 +394,12 @@ public class cashierUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteButton)
-                .addGap(30, 30, 30)
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(increaseButton)
+                        .addComponent(decreaseButton)))
+                .addGap(31, 31, 31)
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(subtotalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(subtotalText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -408,10 +413,10 @@ public class cashierUI extends javax.swing.JFrame {
                     .addComponent(discountInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(applyButton))
                 .addGap(48, 48, 48)
-                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(grandTotalLabel)
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(grandTotalLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(grandTotalText, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(46, 46, 46)
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -497,7 +502,7 @@ public class cashierUI extends javax.swing.JFrame {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(leftPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(0, 3, Short.MAX_VALUE)
+                        .addGap(0, 1, Short.MAX_VALUE)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(rightPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
@@ -522,18 +527,39 @@ public class cashierUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        cartModel.setRowCount(0);
-        grandTotal = 0;
-        subTotal = 0;
-        tax = 0;
+        if(cartModel.getRowCount() == 0){
+            JOptionPane.showMessageDialog(this, "Cart is empty.");
+            return;
+        };
         
-        initDefault();
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to clear the cart?",
+            "Confirmation",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.PLAIN_MESSAGE
+        );
+        
+        if (choice == JOptionPane.YES_OPTION) {
+            cartModel.setRowCount(0);
+            grandTotal = 0;
+            subTotal = 0;
+            tax = 0;
+
+            initDefault();
+        }
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
         // 1. Cart empty check
-        if (isCartEmpty()) {
+        if(cartModel.getRowCount() == 0){
             JOptionPane.showMessageDialog(this, "Cart is empty.");
+            return;
+        }
+        
+        // check if the grand total text is visible
+        if(!grandTotalText.isVisible()){
+            JOptionPane.showMessageDialog(this, "Please, check the grand total first");
             return;
         }
 
@@ -571,6 +597,11 @@ public class cashierUI extends javax.swing.JFrame {
 
         // 6. Clear cart AFTER receipt
         cartModel.setRowCount(0);
+        grandTotal = 0;
+        subTotal = 0;
+        tax = 0;
+        
+        initDefault();
     }//GEN-LAST:event_payButtonActionPerformed
 
     private void allButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allButtonActionPerformed
@@ -642,7 +673,6 @@ public class cashierUI extends javax.swing.JFrame {
             return;
         }
         
-        
         // calculate grandtotal using subtotal, tax and discount
         double totalBeforeDiscount = subTotal + tax;
         double totalDiscount = totalBeforeDiscount * (discountRate / 100.0);
@@ -651,6 +681,78 @@ public class cashierUI extends javax.swing.JFrame {
         grandTotalText.setText(String.format("$ %.2f", grandTotal));
         grandTotalText.setVisible(true);
     }//GEN-LAST:event_applyButtonActionPerformed
+
+    private void decreaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decreaseButtonActionPerformed
+        // 1. get selected row
+        int selectedRow = cartTable.getSelectedRow();
+
+        // safety check
+        if (selectedRow == -1) {
+            return;
+        }
+
+        // 2. get table model
+        DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
+
+        // 3. read price & quantity
+        double price = Double.parseDouble(model.getValueAt(selectedRow, 1).toString());
+        int qty = Integer.parseInt(model.getValueAt(selectedRow, 2).toString());
+
+        // 4. decrease quantity
+        qty--;
+
+        // 5. subtract ONE item price from subtotal
+        subTotal -= price;
+        if (subTotal < 0) subTotal = 0;
+
+        // 6. if qty becomes 0 → remove row
+        if (qty <= 0) {
+            model.removeRow(selectedRow);
+        }
+        
+        // 7. otherwise update qty & row total
+        else {
+            model.setValueAt(qty, selectedRow, 2);           // Quantity column
+            model.setValueAt(String.format("$ %.2f", price * qty), selectedRow, 3);   // Total column
+        }
+
+        // 8. update tax & UI
+        tax = subTotal * 0.1;
+        subtotalText.setText(String.format("$ %.2f", subTotal));
+        taxRateText.setText(String.format("$ %.2f", tax));
+    }//GEN-LAST:event_decreaseButtonActionPerformed
+
+    private void increaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_increaseButtonActionPerformed
+        // 1. get selected row
+        int selectedRow = cartTable.getSelectedRow();
+
+        // safety check
+        if (selectedRow == -1) {
+            return;
+        }
+
+        // 2. get table model
+        DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
+
+        // 3. read price & quantity
+        double price = Double.parseDouble(model.getValueAt(selectedRow, 1).toString());
+        int qty = Integer.parseInt(model.getValueAt(selectedRow, 2).toString());
+
+        // 4. increase quantity
+        qty++;
+
+        // 5. add ONE item price to subtotal
+        subTotal += price;
+
+        // 6. update table values
+        model.setValueAt(qty, selectedRow, 2);           // Quantity column
+        model.setValueAt(String.format("$ %.2f", price * qty), selectedRow, 3);   // Total column
+
+        // 7. update tax & UI
+        tax = subTotal * 0.1;
+        subtotalText.setText(String.format("$ %.2f", subTotal));
+        taxRateText.setText(String.format("$ %.2f", tax));
+    }//GEN-LAST:event_increaseButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -684,11 +786,13 @@ public class cashierUI extends javax.swing.JFrame {
     private javax.swing.JTable cartTable;
     private javax.swing.JPanel categoryPanel;
     private javax.swing.JButton clearButton;
+    private javax.swing.JButton decreaseButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextField discountInput;
     private javax.swing.JButton foodButton;
     private javax.swing.JLabel grandTotalLabel;
     private javax.swing.JLabel grandTotalText;
+    private javax.swing.JButton increaseButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
