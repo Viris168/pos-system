@@ -25,7 +25,7 @@ public class ProductCard extends javax.swing.JPanel {
         final String img =
             (imageName == null || imageName.isEmpty())
             ? "doritoss.jpg"
-            : imageName;
+            : imageName;        //prevents the app from crashing when no image
 
         SwingUtilities.invokeLater(() -> {
             try {
