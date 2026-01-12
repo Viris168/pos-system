@@ -17,9 +17,6 @@ import jdk.jfr.Enabled;
  */
 public class ProductCard extends javax.swing.JPanel {
 
-    /**
-     * Creates new form ProductCard2
-     */
     private cashierUI cashierUI;
     private Product product;
     
@@ -27,20 +24,28 @@ public class ProductCard extends javax.swing.JPanel {
         
         final String img =
             (imageName == null || imageName.isEmpty())
-            ? "doritos.jpg"
-            : imageName;
+            ? "doritoss.jpg"
+            : imageName;        //prevents the app from crashing when no image
 
         SwingUtilities.invokeLater(() -> {
             try {
                 ImageIcon original = new ImageIcon(
-                    getClass().getResource("/image/" + img)
+                    getClass().getResource("/Cashier/image/" + img)
                 );
+                
+                
+                int width = imageLabel.getWidth();
+                int height = imageLabel.getHeight();
+
+            // If the label's size is not set (0x0), use a default size
+            if (width == 0 || height == 0) {
+                width = 100;  
+                height = 100; 
+            }
 
                 Image scaled = original.getImage().getScaledInstance(
-                    imageLabel.getPreferredSize().width,
-                    imageLabel.getPreferredSize().height,
-                    Image.SCALE_SMOOTH
-                );
+                width, height, Image.SCALE_SMOOTH
+            );
 
                 imageLabel.setIcon(new ImageIcon(scaled));
 
@@ -49,7 +54,7 @@ public class ProductCard extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         });
-    };
+    }
     
     public ProductCard(cashierUI cashierUI, Product product, String name, double price, String imageName) {
         initComponents();

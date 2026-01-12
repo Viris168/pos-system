@@ -57,29 +57,30 @@ public class ProductQuery {
         return products;
     }
     
-    // Example method to create a new bill when a purchase is made
+    
     public int createNewBill(double totalAmount) {
-    String query = "INSERT INTO Bills (total_amount) VALUES (?)";
-    int billId = -1;  // Variable to store the generated bill_id
-    try (Connection con = DatabaseConnection.getConnection();
-         PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
         
-        stmt.setDouble(1, totalAmount);  // Set total amount for the bill
-        stmt.executeUpdate();
+            String query = "INSERT INTO Bills (total_amount) VALUES (?)";
+            int billId = -1;  // Variable to store the generated bill_id
+            try (Connection con = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-        // Retrieve the generated bill_id
-        ResultSet generatedKeys = stmt.getGeneratedKeys();
-        if (generatedKeys.next()) {
-            billId = generatedKeys.getInt(1);
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return billId;
+                stmt.setDouble(1, totalAmount);  // Set total amount for the bill
+                stmt.executeUpdate();
+
+                // Retrieve the generated bill_id
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    billId = generatedKeys.getInt(1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return billId;
 }
 
     
-    // Example method to add an item to the Bill_Items table
+    
     public static void addProductToBillItems(int billId, Product product, int quantity) {
     String query = "INSERT INTO Bill_Items (bill_id, product_id, quantity, unit_price, line_total) VALUES (?, ?, ?, ?, ?)";
     try (Connection con = DatabaseConnection.getConnection();
@@ -88,13 +89,13 @@ public class ProductQuery {
         double unitPrice = product.getPrice();
         double lineTotal = unitPrice * quantity;
         
-        stmt.setInt(1, billId);           // Set bill_id (from the newly created bill)
-        stmt.setInt(2, product.getId()); // Set product_id (from the product object)
-        stmt.setInt(3, quantity);         // Set quantity
-        stmt.setDouble(4, unitPrice);     // Set unit price
-        stmt.setDouble(5, lineTotal);     // Set line total (quantity * price)
+        stmt.setInt(1, billId);           
+        stmt.setInt(2, product.getId()); 
+        stmt.setInt(3, quantity);         
+        stmt.setDouble(4, unitPrice);     
+        stmt.setDouble(5, lineTotal);     
 
-        stmt.executeUpdate();  // Execute the insert
+        stmt.executeUpdate(); 
     } catch (SQLException e) {
         e.printStackTrace();
     }
@@ -140,15 +141,15 @@ public class ProductQuery {
     return category;
 }
     public static void updateProductStock(int productId, int quantitySold) {
-    // SQL query to reduce the stock of the product
+    
     String query = "UPDATE Products SET stock = stock - ? WHERE product_id = ?";
 
     try (Connection con = DatabaseConnection.getConnection();
          PreparedStatement stmt = con.prepareStatement(query)) {
 
-        stmt.setInt(1, quantitySold); // Decrease stock by quantity sold
-        stmt.setInt(2, productId);     // Update stock for this product ID
-        stmt.executeUpdate(); // Execute the update query
+        stmt.setInt(1, quantitySold); 
+        stmt.setInt(2, productId);     
+        stmt.executeUpdate(); 
     } catch (SQLException e) {
         e.printStackTrace();
     }

@@ -615,9 +615,9 @@ public class cashierUI extends javax.swing.JFrame {
         String receipt = generateReceipt(cashPaid, change);
         showReceiptPreview(receipt);
         
-            // 6. Create new bill and insert cart data into the database
-        double totalAmount = calculateTotalAmountForCart(); // Calculate the total amount of the cart
-        int billId = p.createNewBill(totalAmount);  // Create a new bill and get the bill_id
+            
+        double totalAmount = calculateTotalAmountForCart(); 
+        int billId = p.createNewBill(totalAmount);  
 
         // Insert each item from the cart into the Bill_Items table
         for (int i = 0; i < cartModel.getRowCount(); i++) {
@@ -625,14 +625,14 @@ public class cashierUI extends javax.swing.JFrame {
             double price = Double.parseDouble(cartModel.getValueAt(i, 1).toString());
             int quantity = Integer.parseInt(cartModel.getValueAt(i, 2).toString());
 
-            // Retrieve the product_id and category using ProductQuery (you should implement these methods)
-            int productId = p.getProductIdByName(name);  // Get the product ID from the database by product name
-            String category = p.getCategoryByName(name); // Get the category of the product from the database
+            
+            int productId = p.getProductIdByName(name);  
+            String category = p.getCategoryByName(name); 
 
-            // Create a Product object based on the data from the cart
+            
             Product product = new Product(productId, name, category, price, quantity);
 
-            // Insert the product into the Bill_Items table
+            
             addProductToBillItems(billId, product, quantity);
             
             updateProductStock(productId, quantity);
@@ -810,31 +810,31 @@ public class cashierUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_discountInputActionPerformed
     
-    // Method to add product to cart and store data in the database
+    
     public void addProductToCartAndDatabase(Product product, int quantity) {
         
         ProductQuery ProductQuery = new ProductQuery();
-               double totalAmount = calculateTotalAmountForCart();  // Assume this method calculates the total for all cart items
+               double totalAmount = calculateTotalAmountForCart();  
 
-        // 2. Create a new bill and get the bill_id
-        int billId = ProductQuery.createNewBill(totalAmount);  // Insert into Bills table and get bill_id
+        
+        int billId = ProductQuery.createNewBill(totalAmount);  
 
-        // 3. Add the product to the cart in the UI
-        addProductToCart(product, quantity);  // Your existing method to add product to the cart
+       
+        addProductToCart(product, quantity);  
 
-        addProductToBillItems(billId, product, quantity);  // Insert into Bill_Items table
+        addProductToBillItems(billId, product, quantity);  
     }
 
     
-        // Method to calculate the total amount of all items in the cart
+        
     public double calculateTotalAmountForCart() {
         double total = 0.0;
 
-        // Loop through each row in the cart table and sum up the totals
+        
         DefaultTableModel model = (DefaultTableModel) cartTable.getModel();
         for (int i = 0; i < model.getRowCount(); i++) {
             double lineTotal = Double.parseDouble(model.getValueAt(i, 3).toString().replace("$", ""));
-            total += lineTotal;  // Add each product's total to the grand total
+            total += lineTotal;  
         }
 
         return total;
