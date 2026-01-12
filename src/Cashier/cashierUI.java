@@ -145,8 +145,6 @@ public class cashierUI extends javax.swing.JFrame {
             );
         }
         
-        
-
         receipt.append("--------------------------------\n");
         receipt.append(String.format("TOTAL  : $%.2f\n", grandTotal));
         receipt.append(String.format("CASH   : $%.2f\n", cashPaid));
@@ -305,6 +303,8 @@ public class cashierUI extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Discount%:");
 
+        discountInput.addActionListener(this::discountInputActionPerformed);
+
         applyButton.setText("Apply");
         applyButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         applyButton.addActionListener(this::applyButtonActionPerformed);
@@ -362,11 +362,9 @@ public class cashierUI extends javax.swing.JFrame {
                             .addGroup(rightPanelLayout.createSequentialGroup()
                                 .addGap(16, 16, 16)
                                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(rightPanelLayout.createSequentialGroup()
-                                        .addComponent(grandTotalLabel)
-                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(grandTotalLabel)
                                     .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(66, 66, 66)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(19, 19, 19))
                             .addGroup(rightPanelLayout.createSequentialGroup()
@@ -807,6 +805,10 @@ public class cashierUI extends javax.swing.JFrame {
          l.setVisible(true);
          this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void discountInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_discountInputActionPerformed
     
     // Method to add product to cart and store data in the database
     public void addProductToCartAndDatabase(Product product, int quantity) {
