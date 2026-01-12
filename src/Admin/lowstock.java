@@ -14,9 +14,9 @@ import javax.swing.table.DefaultTableModel;
 
 public class lowstock extends javax.swing.JPanel {
 
-            private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/p";  
+           private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
            private static final String USER = "root";  
-          private static final String PASS = "Chay00))";     
+           private static final String PASS = "Chay00))";     
     
     public lowstock() {
         initComponents();
@@ -26,7 +26,7 @@ public class lowstock extends javax.swing.JPanel {
     }
     
     public void table_product(){
-        String query = "SELECT * FROM Products WHERE quantity <= low_stock_threshold ";
+        String query = "SELECT * FROM Products WHERE stock <= low_stock_threshold ";
         try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
@@ -64,11 +64,8 @@ public class lowstock extends javax.swing.JPanel {
     }
 }
     
-
-    
-    
 public void checkLowStock() {
-    String query = "SELECT * FROM Products WHERE quantity <= low_stock_threshold";
+    String query = "SELECT * FROM Products WHERE stock <= low_stock_threshold";
     
     try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
          PreparedStatement stmt = conn.prepareStatement(query)) {

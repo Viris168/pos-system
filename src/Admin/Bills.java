@@ -280,10 +280,10 @@ public class Bills extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ Filter JTable by product_id column index (example: column 0 = product_id)
+        // Filter JTable by product_id column index (example: column 0 = product_id)
         sorter.setRowFilter(RowFilter.regexFilter("^" + id + "$", 0));
 
-        // ✅ If no row found in JTable after filtering
+        //  If no row found in JTable after filtering
         if (jTableProduct.getRowCount() == 0) {
             sorter.setRowFilter(null); // reset
             JOptionPane.showMessageDialog(this, "Product ID not found in table!");

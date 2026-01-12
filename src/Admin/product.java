@@ -1,4 +1,3 @@
-
 package Admin;
 
 import java.awt.Image;
@@ -18,7 +17,8 @@ public class product extends javax.swing.JPanel {
     
            private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
            private static final String USER = "root";  
-           private static final String PASS = "Chay00))";     
+           private static final String PASS = "Chay00))";    
+           
     
     public class ProductAdd {
     public static void addProduct(String name, int quantity, double price, String category, String supplier, int lowStockThreshold) {
@@ -51,7 +51,7 @@ public class product extends javax.swing.JPanel {
         try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
              
-             stmt.setString(1, name);                 
+            stmt.setString(1, name);                 
             stmt.setDouble(2, price);               
             stmt.setString(3, category);       
             stmt.setInt(4, stock);
@@ -359,12 +359,12 @@ public class product extends javax.swing.JPanel {
                             .addComponent(jTextFieldProductSupplier, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextFieldProductLowstock, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButtonAddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonAddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonUpdateProduct)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonDeleteProduct)
-                        .addGap(0, 56, Short.MAX_VALUE))
+                        .addGap(0, 36, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonClear)))
@@ -550,13 +550,10 @@ public class product extends javax.swing.JPanel {
         String supplier = jTextFieldProductSupplier.getText();
         String lowstock = jTextFieldProductLowstock.getText();
         
-            // Convert string values to appropriate types
             int quantityInt = Integer.parseInt(quantity);
             double priceDouble = Double.parseDouble(price);
             int lowStockInt = Integer.parseInt(lowstock);
             
-
-            // Insert into the database
             ProductAdd.addProduct(name, quantityInt, priceDouble, category, supplier, lowStockInt);
             table_product();
             
@@ -565,7 +562,8 @@ public class product extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonAddProductActionPerformed
 
     private void jButtonSeaarchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSeaarchActionPerformed
-         DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
+        
+        DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTableProduct.setRowSorter(sorter);
         String search = jTextFieldSearch.getText();
@@ -573,20 +571,23 @@ public class product extends javax.swing.JPanel {
         if (search.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Please enter Product ID");
         return;
-    }
+        }
 
-    int id;
-    try {
-        id = Integer.parseInt(search);
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Product ID must be a number!");
-        return;
-    }
+        int id;
+        try {
+            id = Integer.parseInt(search);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Product ID must be a number!");
+            return;
+        }
 
-    // ✅ Filter JTable by product_id column index (example: column 0 = product_id)
-    sorter.setRowFilter(RowFilter.regexFilter("^" + id + "$", 0));
+    //Filter JTable by product_id 
+    sorter.setRowFilter(RowFilter.regexFilter("^" + id + "$", 0)); //Only show rows where column 0 matches this Product ID exactly
 
-    // ✅ If no row found in JTable after filtering
+    //^ = start of the cell text
+    //$ = end of the cell text
+    
+   
     if (jTableProduct.getRowCount() == 0) {
         sorter.setRowFilter(null); // reset
         JOptionPane.showMessageDialog(this, "Product ID not found in table!");
@@ -686,7 +687,6 @@ public class product extends javax.swing.JPanel {
         return;
     }
 
-    // Delete from database
     String query = "DELETE FROM Products WHERE product_id = ?";
 
     try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -697,8 +697,8 @@ public class product extends javax.swing.JPanel {
 
         if (rowsDeleted > 0) {
             JOptionPane.showMessageDialog(null, "Product deleted successfully");
-            table_product(); // Refresh the table
-            clear(); // Clear the input fields
+            table_product(); 
+            clear(); 
         } else {
             JOptionPane.showMessageDialog(null, "Failed to delete product");
         }
@@ -721,8 +721,8 @@ public class product extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         jTableProduct.setRowSorter(sorter);
-        jTextFieldSearch.setText("");  // Clear the search field
-        sorter.setRowFilter(null);  // Reset the filter
+        jTextFieldSearch.setText("");  
+        sorter.setRowFilter(null);  
         
         checkLowStock();
         
