@@ -61,13 +61,12 @@ public class Bills extends javax.swing.JPanel {
     }
     
     public void check() {
-    String query = "SELECT COUNT(bill_id) AS total_bills FROM Bills;";
+    String query = "SELECT COUNT(bill_id) AS total_bills FROM Bills";
     
     try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
          PreparedStatement stmt = conn.prepareStatement(query)) {
         
         ResultSet rs = stmt.executeQuery();
-        int x = 0;
         
         while (rs.next()) {
             int totalBills = rs.getInt("total_bills");
@@ -226,6 +225,8 @@ public class Bills extends javax.swing.JPanel {
 
         jLabelNumber.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabelNumber.setForeground(new java.awt.Color(255, 0, 0));
+
+        jLabelwarn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Admin/image_admin/bill.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

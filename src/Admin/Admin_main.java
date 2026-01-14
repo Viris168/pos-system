@@ -8,6 +8,8 @@ public class Admin_main extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Admin_main.class.getName());
 
     JpanelLoader loader = new JpanelLoader();
+    product p = new product();  
+    
     
     public Admin_main() {
         initComponents();
@@ -196,7 +198,8 @@ public class Admin_main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
+        Report r = new Report();
+        loader.jPanelLoader(jPanelForload, r);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
