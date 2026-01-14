@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -53,11 +54,21 @@ public class lowstock extends javax.swing.JPanel {
     }
     
     public void setImage(){
-    try {
-        ImageIcon icon = new ImageIcon(getClass().getResource("/Admin/image_admin/wa.png"));
+        try {
+        ImageIcon icon = new ImageIcon(getClass().getResource("/Admin/image_admin/alrt1.png"));
         
-        Image img = icon.getImage().getScaledInstance(67, 67, Image.SCALE_SMOOTH);
+           int width = jLabelwarn.getWidth();
+           int height = jLabelwarn.getHeight();
+
+            
+            if (width == 0 || height == 0) {
+                width = 100;  
+                height = 100; 
+            }
+        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         jLabelwarn.setIcon(new ImageIcon(img));
+        jLabelwarn.setHorizontalAlignment(SwingConstants.CENTER);
+        jLabelwarn.setVerticalAlignment(SwingConstants.CENTER);
     } catch (Exception e) {
         e.printStackTrace();
         System.out.println("Error loading image: " + e.getMessage());
@@ -202,6 +213,8 @@ public void checkLowStock() {
         jLabelNumber.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabelNumber.setForeground(new java.awt.Color(255, 0, 0));
 
+        jLabelwarn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Admin/image_admin/alert 1(1).png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -211,18 +224,18 @@ public void checkLowStock() {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
                         .addComponent(jLabel3)
-                        .addGap(18, 18, 18)
+                        .addGap(137, 137, 137)
                         .addComponent(jLabelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(106, 106, 106)
-                        .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(45, Short.MAX_VALUE))
+                        .addGap(100, 100, 100)
+                        .addComponent(jLabelwarn)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

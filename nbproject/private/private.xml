@@ -3,17 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/cashierUI.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Login/LoginFOrm.java</file>
             <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/ProductImageMapper.java</file>
             <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/Admin_main.java</file>
-            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/lowstock.java</file>
             <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/JpanelLoader.java</file>
             <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/product.java</file>
-            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/Bills.java</file>
-            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/DatabaseConnection.java</file>
-            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/Product.java</file>
-            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/ProductCard.java</file>
             <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/ProductQuery.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/cashierUI.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/Report.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Login/login.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/lowstock.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Cashier/ProductCard.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Admin/Bills.java</file>
+            <file>file:/C:/Users/sokvi/OneDrive/Documents/NetBeansProjects/pos-system-netbeans-v2666666/pos-system/src/Login/LoginSession.java</file>
         </group>
     </open-files>
 </project-private>

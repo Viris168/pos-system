@@ -81,7 +81,7 @@ public class login extends javax.swing.JFrame {
 
         login_sys.setBackground(new java.awt.Color(255, 255, 255));
         login_sys.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        login_sys.setForeground(new java.awt.Color(255, 255, 0));
+        login_sys.setForeground(new java.awt.Color(0, 0, 255));
         login_sys.setText("      Login System");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
