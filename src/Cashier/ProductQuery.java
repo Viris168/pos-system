@@ -4,7 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class ProductQuery {
-
+    
+    // returned function: get all products in product relation
     public static ArrayList<Product> getAllProducts() {
         ArrayList<Product> products = new ArrayList<>();
 
@@ -29,6 +30,7 @@ public class ProductQuery {
         return products;
     }
     
+    // returned function: get products by category in product relation
     public static ArrayList<Product> getProductsByCategory(String category) {
         ArrayList<Product> products = new ArrayList<>();
 
