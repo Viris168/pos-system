@@ -57,7 +57,7 @@ public class product extends javax.swing.JPanel {
             stmt.setInt(4, stock);
             stmt.setString(5, supplier);       
             stmt.setInt(6, lowStockThreshold);       
-            stmt.setInt(7, productId); 
+            stmt.setInt(7, productId);
             stmt.executeUpdate();
             
         } catch (SQLException e) {
@@ -93,7 +93,6 @@ public class product extends javax.swing.JPanel {
     public product(){
         initComponents();
         table_product();
-        setImage();
         checkLowStock();
         loadProductsToTable();
         
@@ -152,17 +151,7 @@ public class product extends javax.swing.JPanel {
         }
     }
     
-    public void setImage(){
-    try {
-        ImageIcon icon = new ImageIcon(getClass().getResource("/Admin/image_admin/wa.png"));
-        
-        Image img = icon.getImage().getScaledInstance(67, 67, Image.SCALE_SMOOTH);
-        jLabelwarn.setIcon(new ImageIcon(img));
-    } catch (Exception e) {
-        e.printStackTrace();
-        System.out.println("Error loading image: " + e.getMessage());
-    }
-}
+    
     
     public void checkLowStock() {
     String query = "SELECT * FROM Products WHERE stock <= low_stock_threshold";
@@ -482,6 +471,8 @@ public class product extends javax.swing.JPanel {
         jLabelNumber.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabelNumber.setForeground(new java.awt.Color(255, 0, 0));
 
+        jLabelwarn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Admin/image_admin/alert 1(1).png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -494,8 +485,8 @@ public class product extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(jLabelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(106, 106, 106)
-                        .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(129, 129, 129)
+                        .addComponent(jLabelwarn)))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -730,6 +721,21 @@ public class product extends javax.swing.JPanel {
     sorter.setRowFilter(null);
 
 
+
+    // Get existing sorter if already set, otherwise create it once
+    TableRowSorter<DefaultTableModel> sorter =
+            (TableRowSorter<DefaultTableModel>) jTableProduct.getRowSorter();
+
+    if (sorter == null) {
+        sorter = new TableRowSorter<>(model);
+        jTableProduct.setRowSorter(sorter);
+    }
+
+    // Clear search text + remove filter
+    jTextFieldSearch.setText("");
+    sorter.setRowFilter(null);
+
+    // Run your low stock check
     checkLowStock();
         
     }//GEN-LAST:event_jButton1ActionPerformed
