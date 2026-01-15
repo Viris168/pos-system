@@ -15,9 +15,9 @@ import java.sql.SQLException;
 
 public class product extends javax.swing.JPanel {   
     
-           private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
-           private static final String USER = "root";  
-           private static final String PASS = "Chay00))";    
+    private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
+    private static final String USER = "root";  
+    private static final String PASS = "16092005K@";    
            
     
     public class ProductAdd {
@@ -710,6 +710,17 @@ public class product extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTableProduct.getModel();
+        TableRowSorter<DefaultTableModel> sorter =
+            (TableRowSorter<DefaultTableModel>) jTableProduct.getRowSorter();
+
+        if (sorter == null) {
+            sorter = new TableRowSorter<>(model);
+            jTableProduct.setRowSorter(sorter);
+        }
+    jTextFieldSearch.setText("");
+    sorter.setRowFilter(null);
+
+
 
     // Get existing sorter if already set, otherwise create it once
     TableRowSorter<DefaultTableModel> sorter =
