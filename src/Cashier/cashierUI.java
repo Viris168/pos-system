@@ -166,7 +166,7 @@ public class cashierUI extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(
             null,
-            pane,
+            pane,   
             "Receipt Preview",
             JOptionPane.PLAIN_MESSAGE
         );
