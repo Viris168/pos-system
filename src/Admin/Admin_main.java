@@ -242,4 +242,9 @@ public class Admin_main extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelForload;
     // End of variables declaration//GEN-END:variables
+
+    public void loadProductPanel() {
+        product p = new product();
+        loader.jPanelLoader(jPanelForload, p);
+    }
 }

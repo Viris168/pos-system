@@ -23,7 +23,6 @@ public class lowstock extends javax.swing.JPanel {
         initComponents();
         table_product();
         checkLowStock();
-        setImage();
     }
     
     public void table_product(){
@@ -52,28 +51,7 @@ public class lowstock extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
-    
-    public void setImage(){
-        try {
-        ImageIcon icon = new ImageIcon(getClass().getResource("/Admin/image_admin/alrt1.png"));
-        
-           int width = jLabelwarn.getWidth();
-           int height = jLabelwarn.getHeight();
-
-            
-            if (width == 0 || height == 0) {
-                width = 100;  
-                height = 100; 
-            }
-        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        jLabelwarn.setIcon(new ImageIcon(img));
-        jLabelwarn.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabelwarn.setVerticalAlignment(SwingConstants.CENTER);
-    } catch (Exception e) {
-        e.printStackTrace();
-        System.out.println("Error loading image: " + e.getMessage());
-    }
-}
+   
     
 public void checkLowStock() {
     String query = "SELECT * FROM Products WHERE stock <= low_stock_threshold";
@@ -87,11 +65,11 @@ public void checkLowStock() {
         while (rs.next()) {
             x++;
         }
-        jLabelNumber.setText(String.valueOf(x));
+        jLabelNumber3.setText(String.valueOf(x));
         
     } catch (SQLException e) {
         e.printStackTrace();
-        jLabelNumber.setText("Error loading stock data");
+        jLabelNumber3.setText("Error loading stock data");
     }
 }
 
@@ -112,6 +90,7 @@ public void checkLowStock() {
         jLabel3 = new javax.swing.JLabel();
         jLabelNumber = new javax.swing.JLabel();
         jLabelwarn = new javax.swing.JLabel();
+        jLabelNumber3 = new javax.swing.JLabel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -215,6 +194,9 @@ public void checkLowStock() {
 
         jLabelwarn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Admin/image_admin/alert 1(1).png"))); // NOI18N
 
+        jLabelNumber3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabelNumber3.setForeground(new java.awt.Color(255, 0, 0));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -223,27 +205,34 @@ public void checkLowStock() {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
-                        .addComponent(jLabel3)
-                        .addGap(137, 137, 137)
-                        .addComponent(jLabelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel3))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(100, 100, 100)
                         .addComponent(jLabelwarn)))
+                .addGap(18, 18, 18)
+                .addComponent(jLabelNumber3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addComponent(jLabelNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelNumber3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabelwarn, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelNumber, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 10, 350, -1));
+        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 10, 360, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTableProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableProductMouseClicked
@@ -259,6 +248,7 @@ public void checkLowStock() {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelNumber;
+    private javax.swing.JLabel jLabelNumber3;
     private javax.swing.JLabel jLabelwarn;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

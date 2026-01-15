@@ -253,6 +253,7 @@ public class login extends javax.swing.JFrame {
                   Admin_main admin = new Admin_main();
                   admin.setVisible(true);
                   this.dispose();  // Close the login window
+                  admin.loadProductPanel();
               }
               
               else if (LoginSession.Usertype.equals("cashier")) {
