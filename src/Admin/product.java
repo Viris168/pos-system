@@ -722,9 +722,7 @@ public class product extends javax.swing.JPanel {
 
 
 
-    // Get existing sorter if already set, otherwise create it once
-    TableRowSorter<DefaultTableModel> sorter =
-            (TableRowSorter<DefaultTableModel>) jTableProduct.getRowSorter();
+    
 
     if (sorter == null) {
         sorter = new TableRowSorter<>(model);

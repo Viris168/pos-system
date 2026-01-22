@@ -66,6 +66,7 @@ public class ProductCard extends javax.swing.JPanel {
         
         jLabelName.setText(name);
         jLabelPrice.setText("$ " + price);
+        quantitySpinner.setValue(1);
         setProductImage(imageName);
         
         // set fixed size for productCard to avoid from stretching
@@ -200,12 +201,12 @@ public class ProductCard extends javax.swing.JPanel {
                 "Invalid Quantity",
                 JOptionPane.WARNING_MESSAGE
             );
-            quantitySpinner.setValue(0);
+            quantitySpinner.setValue(1);
             return;
         }
             
         cashierUI.addProductToCart(product, qty);
-        quantitySpinner.setValue(0);
+        quantitySpinner.setValue(1);
     }//GEN-LAST:event_addToCartButtonActionPerformed
 
 
