@@ -6,12 +6,15 @@ package Cashier;
 
 import static Cashier.ProductQuery.addProductToBillItems;
 import static Cashier.ProductQuery.updateProductStock;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import login.login;
 
@@ -26,7 +29,8 @@ public class cashierUI extends javax.swing.JFrame {
     private double subTotal = 0;
     private double tax = 0;
     private double grandTotal = 0;
-    
+    private JButton activeCategoryButton;
+
     private void initDefault(){
         subtotalText.setText(String.format("$ %.2f", subTotal));
         taxRateText.setText(String.format("$ %.2f", tax));
@@ -41,7 +45,7 @@ public class cashierUI extends javax.swing.JFrame {
     // load all products from database then make a product card to display in grid container
     private void displayProducts(ArrayList<Product> products) {
         productContainer.removeAll();
-
+        
         for (Product p : products) {
             String imageName = ProductImageMapper.getImage(p.getName());
 
@@ -123,6 +127,20 @@ public class cashierUI extends javax.swing.JFrame {
         taxRateText.setText(String.format("$ %.2f", tax));
     }
     
+    private void setActiveCategory(JButton clickedButton) {
+        
+        // skip at first cuz activeCategoryButton == null once we run
+        if (activeCategoryButton != null) {
+            activeCategoryButton.setBackground(
+                UIManager.getColor("Button.background")
+            );
+        }
+
+        clickedButton.setBackground(Color.BLACK);
+
+        activeCategoryButton = clickedButton;
+    }
+    
     private String generateReceipt(double cashPaid, double change) {
         StringBuilder receipt = new StringBuilder();
 
@@ -171,7 +189,9 @@ public class cashierUI extends javax.swing.JFrame {
             JOptionPane.PLAIN_MESSAGE
         );
     }
-
+    
+    
+    
     public cashierUI() {
         initComponents();
         
@@ -223,6 +243,8 @@ public class cashierUI extends javax.swing.JFrame {
         beverageButton = new javax.swing.JButton();
         foodButton = new javax.swing.JButton();
         snackButton = new javax.swing.JButton();
+        searchBar = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -459,6 +481,12 @@ public class cashierUI extends javax.swing.JFrame {
         snackButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         snackButton.addActionListener(this::snackButtonActionPerformed);
 
+        searchBar.addActionListener(this::searchBarActionPerformed);
+
+        searchButton.setText("Search");
+        searchButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        searchButton.addActionListener(this::searchButtonActionPerformed);
+
         javax.swing.GroupLayout categoryPanelLayout = new javax.swing.GroupLayout(categoryPanel);
         categoryPanel.setLayout(categoryPanelLayout);
         categoryPanelLayout.setHorizontalGroup(
@@ -472,7 +500,11 @@ public class cashierUI extends javax.swing.JFrame {
                 .addComponent(foodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(snackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addGap(38, 38, 38)
+                .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchButton)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         categoryPanelLayout.setVerticalGroup(
             categoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -482,7 +514,9 @@ public class cashierUI extends javax.swing.JFrame {
                     .addComponent(allButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(snackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(beverageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(foodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(foodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
@@ -547,7 +581,7 @@ public class cashierUI extends javax.swing.JFrame {
         if(cartModel.getRowCount() == 0){
             JOptionPane.showMessageDialog(this, "Cart is empty.");
             return;
-        };
+        }
         
         int choice = JOptionPane.showConfirmDialog(
             this,
@@ -650,10 +684,12 @@ public class cashierUI extends javax.swing.JFrame {
     }//GEN-LAST:event_payButtonActionPerformed
 
     private void allButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allButtonActionPerformed
+        setActiveCategory(allButton);
         displayProducts(ProductQuery.getAllProducts());
     }//GEN-LAST:event_allButtonActionPerformed
 
     private void beverageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beverageButtonActionPerformed
+        setActiveCategory(beverageButton);
         displayProducts(ProductQuery.getProductsByCategory("Beverage"));
     }//GEN-LAST:event_beverageButtonActionPerformed
 
@@ -688,10 +724,12 @@ public class cashierUI extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void foodButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_foodButtonActionPerformed
+        setActiveCategory(foodButton);
         displayProducts(ProductQuery.getProductsByCategory("Food"));
     }//GEN-LAST:event_foodButtonActionPerformed
 
     private void snackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snackButtonActionPerformed
+        setActiveCategory(snackButton);
         displayProducts(ProductQuery.getProductsByCategory("Snack"));
     }//GEN-LAST:event_snackButtonActionPerformed
 
@@ -809,7 +847,30 @@ public class cashierUI extends javax.swing.JFrame {
     private void discountInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discountInputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_discountInputActionPerformed
-    
+
+    private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchBarActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+       String keyword = searchBar.getText().trim().toUpperCase();
+       
+        if (keyword.isEmpty()) {
+            displayProducts(ProductQuery.getAllProducts());
+            return;
+        }
+        
+        if(!keyword.isEmpty() && Character.isDigit(keyword.charAt(0))){
+            JOptionPane.showMessageDialog(this, "Product Not Found!");
+            searchBar.setText("");
+            return;
+        }
+
+        ArrayList<Product> results = ProductQuery.searchProductsByName(keyword);
+        
+        displayProducts(results);
+    }//GEN-LAST:event_searchButtonActionPerformed
+
     
     public void addProductToCartAndDatabase(Product product, int quantity) {
         
@@ -891,6 +952,8 @@ public class cashierUI extends javax.swing.JFrame {
     private javax.swing.JButton payButton;
     private javax.swing.JPanel productContainer;
     private javax.swing.JPanel rightPanel;
+    private javax.swing.JTextField searchBar;
+    private javax.swing.JButton searchButton;
     private javax.swing.JButton snackButton;
     private javax.swing.JLabel subtotalLabel;
     private javax.swing.JLabel subtotalText;

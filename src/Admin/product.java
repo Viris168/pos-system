@@ -754,6 +754,9 @@ public class product extends javax.swing.JPanel {
     sorter.setRowFilter(null);
 
 
+
+    
+
     if (sorter == null) {
         sorter = new TableRowSorter<>(model);
         jTableProduct.setRowSorter(sorter);
