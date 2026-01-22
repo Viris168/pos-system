@@ -12,18 +12,26 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.plaf.FileChooserUI;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 
 public class product extends javax.swing.JPanel {   
     
     private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
     private static final String USER = "root";  
-    private static final String PASS = "16092005K@";    
+    private static final String PASS = "Chay00))";    
+    private File selectedImageFile = null;
            
     
     public class ProductAdd {
-    public static void addProduct(String name, int quantity, double price, String category, String supplier, int lowStockThreshold) {
+    public static void addProduct(String name, int quantity, double price, String category, String supplier, int lowStockThreshold, String imagepath) {
      
-        String query = "INSERT INTO products (product_name, price, category, stock, supplier, low_stock_threshold) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO products (product_name, price, category, stock, supplier, low_stock_threshold, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)";
         
         try (java.sql.Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -34,6 +42,7 @@ public class product extends javax.swing.JPanel {
             stmt.setInt(4, quantity);                
             stmt.setString(5, supplier);             
             stmt.setInt(6, lowStockThreshold);
+            stmt.setString(7, imagepath);
           
             conn.setAutoCommit(true);
             
@@ -202,6 +211,8 @@ public class product extends javax.swing.JPanel {
         jTextFieldProductSupplier = new javax.swing.JTextField();
         jTextFieldProductLowstock = new javax.swing.JTextField();
         jButtonClear = new javax.swing.JButton();
+        jButtonimport = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProduct = new javax.swing.JTable();
@@ -324,38 +335,47 @@ public class product extends javax.swing.JPanel {
         jButtonClear.setText("Clear");
         jButtonClear.addActionListener(this::jButtonClearActionPerformed);
 
+        jButtonimport.setText("Import");
+        jButtonimport.addActionListener(this::jButtonimportActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldProductName)
-                            .addComponent(jTextFieldProductCategory, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldProductQuantity, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldProductPrice)
-                            .addComponent(jTextFieldProductSupplier, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldProductLowstock, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldProductName)
+                                    .addComponent(jTextFieldProductCategory, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jTextFieldProductQuantity, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jTextFieldProductPrice)
+                                    .addComponent(jTextFieldProductSupplier, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jTextFieldProductLowstock, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jButtonAddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonUpdateProduct)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonDeleteProduct)
+                                .addGap(0, 36, Short.MAX_VALUE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButtonAddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonUpdateProduct)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonDeleteProduct)
-                        .addGap(0, 36, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonimport)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonClear)))
                 .addContainerGap())
         );
@@ -386,9 +406,16 @@ public class product extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(jTextFieldProductLowstock, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(jButtonimport)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAddProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonUpdateProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -396,7 +423,7 @@ public class product extends javax.swing.JPanel {
                 .addGap(15, 15, 15))
         );
 
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(793, 170, 370, 430));
+        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 130, 370, 470));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
 
@@ -541,11 +568,17 @@ public class product extends javax.swing.JPanel {
         String supplier = jTextFieldProductSupplier.getText();
         String lowstock = jTextFieldProductLowstock.getText();
         
+        
+        // Get image path (null if no image selected)
+        String imagePath = null;
+        if (selectedImageFile != null) {
+            imagePath = selectedImageFile.getAbsolutePath();
+        }
             int quantityInt = Integer.parseInt(quantity);
             double priceDouble = Double.parseDouble(price);
             int lowStockInt = Integer.parseInt(lowstock);
-            
-            ProductAdd.addProduct(name, quantityInt, priceDouble, category, supplier, lowStockInt);
+            System.out.print(imagePath);
+            ProductAdd.addProduct(name, quantityInt, priceDouble, category, supplier, lowStockInt, imagePath);
             table_product();
             
             clear();
@@ -738,6 +771,55 @@ public class product extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButtonimportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonimportActionPerformed
+        // TODO add your handling code here:
+                                             
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setAcceptAllFileFilterUsed(false);
+    fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Image Files", "jpg", "png", "gif", "jpeg"));
+
+    int result = fileChooser.showOpenDialog(this);
+    if (result == JFileChooser.APPROVE_OPTION) {
+        selectedImageFile = fileChooser.getSelectedFile(); // This line stores the file
+        
+        System.out.println("Selected file: " + selectedImageFile.getAbsolutePath()); // DEBUG LINE
+        
+        try {
+            BufferedImage image = ImageIO.read(selectedImageFile);
+            
+            if (image == null) {
+                JOptionPane.showMessageDialog(this, "Failed to load image", "Error", JOptionPane.ERROR_MESSAGE);
+                selectedImageFile = null;
+                return;
+            }
+            
+            
+            int width = jLabel8.getWidth();
+            int height = jLabel8.getHeight();
+            
+           
+            if (width == 0 || height == 0) {
+                width = 100;
+                height = 100;
+            }
+            
+            
+            Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            
+            jLabel8.setIcon(new ImageIcon(scaledImage));
+           
+            JOptionPane.showMessageDialog(this, "Image imported: " + selectedImageFile.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
+            
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error loading image: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            selectedImageFile = null;
+        }
+    } else {
+        System.out.println("File selection cancelled"); 
+    }
+    
+    }//GEN-LAST:event_jButtonimportActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -746,6 +828,7 @@ public class product extends javax.swing.JPanel {
     private javax.swing.JButton jButtonDeleteProduct;
     private javax.swing.JButton jButtonSeaarch;
     private javax.swing.JButton jButtonUpdateProduct;
+    private javax.swing.JButton jButtonimport;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -753,6 +836,7 @@ public class product extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabelNumber;
     private javax.swing.JLabel jLabelSearchID;
     private javax.swing.JLabel jLabelwarn;
