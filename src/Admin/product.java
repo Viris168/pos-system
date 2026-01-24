@@ -28,7 +28,7 @@ public class product extends javax.swing.JPanel {
     
     private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
     private static final String USER = "root";  
-    private static final String PASS = "Chay00))";    
+    private static final String PASS = "16092005K@";    
     private File selectedImageFile = null;
            
     
@@ -106,9 +106,11 @@ public class product extends javax.swing.JPanel {
         selectedImageFile = null;
         jLabel8.setIcon(null);
        
+        jLabel8.setIcon(null);
+        selectedImageFile = null;
+        
     }
     
-
 
     public product(){
         initComponents();
