@@ -24,7 +24,7 @@ public class product extends javax.swing.JPanel {
     
     private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
     private static final String USER = "root";  
-    private static final String PASS = "Chay00))";    
+    private static final String PASS = "16092005K@";    
     private File selectedImageFile = null;
            
     
@@ -95,9 +95,11 @@ public class product extends javax.swing.JPanel {
         jTextFieldProductSupplier.setText("");
         jTextFieldProductLowstock.setText("");
         jTextFieldSearch.setText("");
+        jLabel8.setIcon(null);
+        selectedImageFile = null;
+        
     }
     
-
 
     public product(){
         initComponents();
@@ -337,6 +339,8 @@ public class product extends javax.swing.JPanel {
 
         jButtonimport.setText("Import");
         jButtonimport.addActionListener(this::jButtonimportActionPerformed);
+
+        jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

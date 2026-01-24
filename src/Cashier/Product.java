@@ -20,8 +20,6 @@ public class Product {
         this.price = price;
     }
 
-
-    // Getters (VERY IMPORTANT)
     public int getId() {
         return id;
     }
