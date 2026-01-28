@@ -258,6 +258,7 @@ public class login extends javax.swing.JFrame {
               
               else if (LoginSession.Usertype.equals("cashier")) {
                   cashierUI cash = new cashierUI();
+                  cash.loadUserInfoByUsername(username);
                   cash.setVisible(true);
                   this.dispose();  
               }
@@ -296,7 +297,16 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public static void main(String args[]) {
-        
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         java.awt.EventQueue.invokeLater(() -> new login().setVisible(true));
     }
 
