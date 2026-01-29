@@ -5,6 +5,14 @@
 package Cashier;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -19,41 +27,63 @@ public class ProductCard extends javax.swing.JPanel {
 
     private cashierUI cashierUI;
     private Product product;
+    private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
+    private static final String USER = "root";  
+    private static final String PASS = "Chay00))";
     
-    private void setProductImage(String imageName) {
-        
-        final String img =
-            (imageName == null || imageName.isEmpty())
-            ? "doritoss.jpg"
-            : imageName;        //prevents the app from crashing when no image
+private void setProductImage(String imgPath) {
+    try {
+        if (imgPath == null || imgPath.trim().isEmpty()) {
+            imageLabel.setIcon(null);
+            imageLabel.setText("No image");
+            return;
+        }
 
-        SwingUtilities.invokeLater(() -> {
-            try {
-                ImageIcon original = new ImageIcon(
-                    getClass().getResource("/Cashier/image/" + img)
-                );
-                
-                
-                int width = imageLabel.getWidth();
-                int height = imageLabel.getHeight();
+        File imgFile = new File(imgPath);
 
-            // If the label's size is not set (0x0), use a default size
-            if (width == 0 || height == 0) {
-                width = 100;  
-                height = 100; 
+        if (!imgFile.exists()) {
+            imageLabel.setIcon(null);
+            imageLabel.setText("Not found");
+            return;
+        }
+
+        BufferedImage image = ImageIO.read(imgFile);
+        if (image == null) {
+            imageLabel.setIcon(null);
+            imageLabel.setText("Invalid");
+            return;
+        }
+
+        int w = imageLabel.getWidth();
+        int h = imageLabel.getHeight();
+        if (w <= 0 || h <= 0) { w = 150; h = 150; }
+
+        Image scaled = image.getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        imageLabel.setIcon(new ImageIcon(scaled));
+        imageLabel.setText("");
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        imageLabel.setIcon(null);
+        imageLabel.setText("Error");
+    }
+}
+
+        public static String getImagePathFromDBByName(String productName) {
+        String sql = "SELECT image_path FROM products WHERE product_name = ?";
+
+        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, productName);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getString("image_path");
             }
-
-                Image scaled = original.getImage().getScaledInstance(
-                width, height, Image.SCALE_SMOOTH
-            );
-
-                imageLabel.setIcon(new ImageIcon(scaled));
-
-            } catch (Exception e) {
-                System.out.println("Image not found: " + img);
-                e.printStackTrace();
-            }
-        });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     
     public ProductCard(cashierUI cashierUI, Product product, String name, double price, String imageName) {

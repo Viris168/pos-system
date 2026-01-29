@@ -1,9 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package Cashier;
 
+import static Cashier.ProductCard.getImagePathFromDBByName;
 import static Cashier.ProductQuery.addProductToBillItems;
 import static Cashier.ProductQuery.updateProductStock;
 import java.awt.BorderLayout;
@@ -24,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import login.login;
+import java.sql.*;
 
 /**
  *
@@ -37,6 +36,10 @@ public class cashierUI extends javax.swing.JFrame {
     private double tax = 0;
     private double grandTotal = 0;
     private JButton activeCategoryButton;
+    private static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/data";  
+    private static final String USER = "root";  
+    private static final String PASS = "Chay00))";
+    
 
     private void initDefault(){
         subtotalText.setText(String.format("$ %.2f", subTotal));
@@ -48,7 +51,8 @@ public class cashierUI extends javax.swing.JFrame {
         deleteButton.setEnabled(false);
         grandTotalText.setVisible(false);
         time.setText(getCurrentDateTime());
-    }
+    }   
+       
     
     private String getCurrentDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
@@ -59,14 +63,14 @@ public class cashierUI extends javax.swing.JFrame {
         productContainer.removeAll();
         
         for (Product p : products) {
-            String imageName = ProductImageMapper.getImage(p.getName());
+            String imagePath = getImagePathFromDBByName(p.getName());
 
             ProductCard card = new ProductCard(
                 this,
                 p,
                 p.getName(),
                 p.getPrice(),
-                imageName
+                imagePath // now it is DB path
             );
 
             productContainer.add(card);
@@ -294,9 +298,10 @@ public class cashierUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        jLabeluser = new javax.swing.JLabel();
         time = new javax.swing.JLabel();
+        jlabeluser = new javax.swing.JLabel();
+        jLabelrole = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -587,13 +592,12 @@ public class cashierUI extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Role:");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel6.setText("Sethar TyKun");
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel7.setText("Admin");
+        jLabeluser.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabeluser.setToolTipText("");
 
         time.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jlabeluser.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -609,11 +613,17 @@ public class cashierUI extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabeluser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(time, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jlabeluser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelrole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -622,11 +632,12 @@ public class cashierUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabeluser)
+                    .addComponent(jlabeluser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel7))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelrole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
@@ -1013,13 +1024,37 @@ public class cashierUI extends javax.swing.JFrame {
         }
 
         return total;
-    }
+    }   
+   
 
+    public void loadUserInfoByUsername(String username) {
+    String sql = "SELECT username, login_as FROM users WHERE username = ?";
+
+    try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, username);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                jLabeluser.setText(rs.getString("username"));
+                jLabelrole.setText(rs.getString("login_as"));
+            } else {
+                jLabeluser.setText("Unknown");
+                jLabelrole.setText("-");
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        
         java.awt.EventQueue.invokeLater(() -> new cashierUI().setVisible(true));
     }
 
@@ -1043,13 +1078,14 @@ public class cashierUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelrole;
+    private javax.swing.JLabel jLabeluser;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jlabeluser;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton payButton;
     private javax.swing.JPanel productContainer;
